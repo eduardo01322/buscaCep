@@ -1,9 +1,28 @@
+import axios from 'axios';
 import React, { Component, useState, ChangeEvent, FormEvent, useEffect} from 'react';
 import styles from "../App.module.css";
 import { CadastroInterface } from '../interfaces/CadastroInterface';
+
+
 const Listagem = () => {
 
     const [usuarios, setUsuarios] = useState<CadastroInterface[]>([]);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        async function fetchData(){
+            try{
+                const Response = await axios.get('http://10.137.9.132:8000/api/find');
+                setUsuarios(Response.data.data);
+            } catch(error)
+            {setError("Ocorreu um erro");
+        console.log(error);
+            }
+        }
+
+        fetchData();
+
+    },[]);
 
     return (
         <div>
@@ -23,16 +42,18 @@ const Listagem = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>claudio</td>
-                                <td>123.123.132-23</td>
-                                <td>claudio@senai.br</td>
+                            {usuarios.map(usuario => (
+                            <tr key={usuario.id}>
+                                <td>{usuario.id}</td>
+                                <td>{usuario.nome}</td>
+                                <td>{usuario.cpf}</td>
+                                <td>{usuario.email}</td>
                                 <td>
                                     <a href="#" className='btn btn-primary btn-sm'>Editar</a>
                                     <a href="#" className='btn btn-danger btn-sm'>Excluir</a>
                                 </td>
                             </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
