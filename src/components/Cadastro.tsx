@@ -10,6 +10,7 @@ const Cadastro = () => {
     const [email, setEmail] = useState<string>("");
     const [cpf, setCpf] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    
     const cadastrarUsuario = (e: FormEvent) => {
         e.preventDefault();
         const dados = {
@@ -18,13 +19,21 @@ const Cadastro = () => {
             cpf: cpf,
             password: password
         }
-        axios.post('http://10.137.9.131:8000/api/store', 
-        dados, {headers: {"Accept": "application/json", 
-        "Content-Type": "application/json"}
-        }).then(function(Response){window.location.href= "/listagem";
-        }).catch(function(error) {console.log(error);
+console.log(dados);
+        axios.post('http://10.137.9.131:8000/api/store',
+            dados, {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+        }).then(function (Response) {
+            window.location.href = "/listagem";
+        }).catch(function (error) {
+            console.log(error);
         });
     }
+
+
     const handleState = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.name === "nome") { setNome(e.target.value); }
         if (e.target.name === "email") { setEmail(e.target.value); }
@@ -43,7 +52,7 @@ const Cadastro = () => {
                             <form onSubmit={cadastrarUsuario} className='row g-3'>
                                 <div className='col-6'>
                                     <label htmlFor="nome" className='form label'>nome</label>
-                                    <input type="text" name='name' className='form-control' required onChange={handleState} />
+                                    <input type="text" name='nome' className='form-control' required onChange={handleState} />
                                 </div>
                                 <div className='col-6'>
                                     <label htmlFor="email" className='form label'>E-mail</label>
