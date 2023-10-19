@@ -7,12 +7,39 @@ import { CadastroInterface } from '../interfaces/CadastroInterface';
 const Listagem = () => {
 
     const [usuarios, setUsuarios] = useState<CadastroInterface[]>([]);
+    const [pesquisa, setpesquisa] = useState<string>('');
     const [error, setError] = useState("");
+
+    const handleState = (e: ChangeEvent<HTMLInputElement>) => {
+        if(e.target.name === "pesquisa"){setpesquisa(e.target.value);
+        }
+    }
+
+    const buscar = (e: FormEvent) => {e.preventDefault();
+    async function fetchData() {
+        try{
+            const Response = await axios.post('http://10.137.9.134:8000/api/findNome',
+            {nome: pesquisa}, { 
+                headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        }).then(function (Response) {
+            setUsuarios(Response.data.data);
+        }).catch(function (error) {
+            console.log(error);
+        });
+    } catch(error){
+        console.log(error);
+    }   
+    }
+    fetchData();
+}
 
     useEffect(() => {
         async function fetchData(){
             try{
-                const Response = await axios.get('http://10.137.9.131:8000/api/find');
+                const Response = await axios.get('http://10.137.9.134:8000/api/find');
                 setUsuarios(Response.data.data);
             } catch(error)
             {setError("Ocorreu um erro");
@@ -28,6 +55,22 @@ const Listagem = () => {
         <div>
             <main className={styles.main}>
                 <div className='container'>
+                    <div className='col-mb mb-3'>
+                        <div className='card'>
+                            <div className='card-body'>
+                            <h5 className='card-title'>pesquisar</h5>
+                            <form onSubmit={buscar} className='row'>
+                                <div className='col-10'>
+                                    <input type="text" name='pesquisa' 
+                                    className='form-control' onChange={handleState}/>
+                                </div>
+                                <div className='col-1'>
+                                    <button type="submit" className='btn btn-success'>pesquisar</button>
+                                    </div>
+                            </form>
+                            </div>
+                            </div>
+                            </div>                    
                 <div className='card'>
                 <div className='card-body'>
                     <h5 className='card-title'> Listagem de usuários</h5>
